@@ -13,7 +13,11 @@ The project is named after my puppy, **Tzuf** (צוף).
 
 The motivation was simple: whenever my bedroom door is left open, Tzuf takes the opportunity to head inside and cause absolute chaos. To prevent my room from being turned upside down, I built this monitor to give me a real-time "early warning system". Now, I get an instant notification the second the door is breached, allowing me to intervene before the mess happens.
 
-![Tzuf](pictures/tzuf01.jpg)
+<p align="center">
+  <img src="pictures/tzuf01.jpg" width="50%" title="Tzuf">
+  <br>
+  <i>Tzuf: The reason this project exists.</i>
+</p>
 
 ---
 
