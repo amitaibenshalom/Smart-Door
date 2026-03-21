@@ -1,0 +1,4 @@
+Server/.env
+
+Server/__pycache__/
+*.pyc

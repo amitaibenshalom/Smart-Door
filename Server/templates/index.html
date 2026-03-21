@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Amitai's Door</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <script>
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark-mode');
+        }
+    </script>
+
+    <style>
+        /* --- CSS Variables for Light/Dark Theme --- */
+        :root {
+            --bg-color: #f4f4f4;
+            --text-color: #333;
+            --timer-color: #555;
+            --footer-text: #777;
+            --footer-border: #ccc;
+            --link-color: #555;
+            --link-hover: #000;
+        }
+
+        html.dark-mode {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --timer-color: #aaaaaa;
+            --footer-text: #888;
+            --footer-border: #333;
+            --link-color: #aaa;
+            --link-hover: #fff;
+        }
+
+        body { 
+            font-family: sans-serif; 
+            text-align: center; 
+            padding: 50px 20px 20px 20px; 
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 90vh;
+            
+            /* Apply the variables with a smooth transition */
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+        
+        /* --- Theme Toggle Button --- */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.8em;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+        .theme-toggle:hover {
+            background-color: rgba(128, 128, 128, 0.2);
+            transform: scale(1.1);
+        }
+
+        /* --- Warning Banner --- */
+        .warning-banner {
+            background-color: #ff9800; 
+            color: #fff;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        .warning-banner.hidden { display: none; }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .warning-icon { display: inline-block; animation: pulse 2s infinite; }
+
+        /* --- Main Content --- */
+        .content { flex: 1; }
+        .status { font-size: 4em; font-weight: bold; margin-bottom: 10px; }
+        .open { color: #e74c3c; }   
+        .closed { color: #2ecc71; } 
+        .details { font-size: 1.5em; color: var(--text-color); transition: color 0.4s ease; }
+        .timer { font-size: 2em; font-weight: bold; color: var(--timer-color); margin-top: 10px; transition: color 0.4s ease; }
+        
+        /* --- Footer --- */
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid var(--footer-border);
+            font-size: 0.9em;
+            color: var(--footer-text);
+            transition: border-color 0.4s ease, color 0.4s ease;
+        }
+        .footer a { color: var(--link-color); text-decoration: none; font-weight: bold; transition: color 0.4s ease; }
+        .footer a:hover { text-decoration: underline; color: var(--link-hover); }
+    </style>
+</head>
+<body>
+    
+    <button id="theme-toggle" class="theme-toggle" title="Toggle Dark Mode">🌙</button>
+
+    <div id="connection-warning" class="warning-banner {% if is_connected %}hidden{% endif %}">
+        <span class="warning-icon">⚠️</span> 
+        Sensor Disconnected! Data may not be accurate.
+    </div>
+
+    <div class="content">
+        <h1>My Door's Status</h1>
+        
+        {% set is_open = door_state['status'] == 'open' %}
+        {% set css_class = 'open' if is_open else 'closed' %}
+        {% set display_text = 'DOOR IS OPENED!!' if is_open else 'Door is closed' %}
+        {% set time_label = 'Open since:' if is_open else 'Closed since:' %}
+
+        <div id="status-text" class="status {{ css_class }}">
+            {{ display_text }}
+        </div>
+
+        <div class="details">
+            <p>{{ time_label }} <span id="last-change-time">Loading...</span></p>
+        </div>
+
+        <div class="timer" id="live-timer">Duration: 0h 0m 0s</div>
+    </div>
+
+    <div class="footer">
+        <p>For support, feel free to reach me out!</p>
+        <p><a href="mailto:amitai@amitaibenshalom.com">amitai@amitaibenshalom.com</a></p>
+    </div>
+
+    <script>
+        // --- THEME TOGGLE LOGIC ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+
+        // Set initial button icon based on the script we ran in the <head>
+        if (htmlElement.classList.contains('dark-mode')) {
+            themeToggleBtn.innerText = '☀️';
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark-mode');
+            
+            if (htmlElement.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                themeToggleBtn.innerText = '☀️';
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeToggleBtn.innerText = '🌙';
+            }
+        });
+
+        // --- DOOR LOGIC ---
+        const currentStatus = "{{ door_state['status'] }}"; 
+        const lastChangeTimestamp = {{ door_state['last_change'].timestamp() }} * 1000;
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const diff = now - lastChangeTimestamp;
+            if (diff < 0) return;
+
+            const seconds = Math.floor((diff / 1000) % 60);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+            const hours = Math.floor((diff / (1000 * 60 * 60)));
+
+            document.getElementById("live-timer").innerText = 
+                "Duration: " + hours + "h " + minutes + "m " + seconds + "s";
+        }
+
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        const dateObj = new Date(lastChangeTimestamp);
+        const options = { 
+            year: 'numeric', month: '2-digit', day: '2-digit', 
+            hour: '2-digit', minute: '2-digit', second: '2-digit',
+            hour12: false 
+        };
+        
+        document.getElementById("last-change-time").innerText = 
+            dateObj.toLocaleString('en-GB', options).replace(',', '');
+
+        // Polling the server every 2 seconds
+        setInterval(function() {
+            fetch('/api/data')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status !== currentStatus) {
+                        location.reload(); 
+                    }
+                    
+                    const warningBanner = document.getElementById('connection-warning');
+                    if (data.is_connected) {
+                        warningBanner.classList.add('hidden');
+                    } else {
+                        warningBanner.classList.remove('hidden');
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('connection-warning').classList.remove('hidden');
+                });
+        }, 2000);
+    </script>
+</body>
+</html>
