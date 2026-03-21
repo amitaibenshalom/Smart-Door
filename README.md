@@ -92,7 +92,7 @@ nano Server/.env
 To ensure the monitor starts automatically on boot:
 
 1.  Copy `Server/door.service` to `/etc/systemd/system/`.
-2.  Update the `ExecStart` path in the file to match your project location.
+2.  Update the `user/group` and `ExecStart` path in the file to match your project location.
 3.  Run:
 
 

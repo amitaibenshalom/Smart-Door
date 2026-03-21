@@ -15,7 +15,7 @@ HEARTBEAT_TIMEOUT = 15
 
 # --- WhatsApp Settings ---
 USE_WHATSAPP = True
-DOMAIN_URL = "https://amitaibenshalom.com"
+DOMAIN_URL = "https://amitaibenshalom.com"  # optional... Used for the first WhatsApp message
 
 # Securely grab the secrets
 PHONE_NUMBER = os.getenv("PHONE_NUMBER")

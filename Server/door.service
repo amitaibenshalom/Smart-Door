@@ -1,15 +1,15 @@
 [Unit]
-Description=Amitai Door Monitor Python Server
+Description=Door Monitor Python Server
 After=network.target
 
 [Service]
-User=amitai
-Group=amitai
+User=<user>
+Group=<group>
 
-WorkingDirectory=/home/amitai/door
+WorkingDirectory=/path/to/Smart-Door
 
 # "python3 -u" means "unbuffered" so logs show up immediately
-ExecStart=/usr/bin/python3 -u app.py
+ExecStart=/usr/bin/python3 -u Server/app.py
 
 Restart=always
 RestartSec=10
