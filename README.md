@@ -7,10 +7,6 @@ An IoT solution for real-time door state monitoring. This project uses an **Ardu
 
 ---
 
-> **🔌 Compatibility Note:** > You can use **any Arduino-compatible device** that supports serial communication (Arduino Uno, Nano, Mega, ESP8266, ESP32, etc.) for the sensor node. Similarly, the server can be hosted on any device capable of running Python (Raspberry Pi, old laptop, desktop).
-
----
-
 ## 🐕 Why "Anti-Tzuf"?
 
 The project is named after my puppy, **Tzuf** (צוף). 
@@ -22,6 +18,10 @@ The motivation was simple: whenever my bedroom door is left open, Tzuf takes the
   <br>
   <i>Tzuf: The reason this project exists.</i>
 </p>
+
+---
+
+> **🔌 Compatibility Note:** > You can use **any Arduino-compatible device** that supports serial communication (Arduino Uno, Nano, Mega, ESP8266, ESP32, etc.) for the sensor node. Similarly, the server can be hosted on any device capable of running Python (Raspberry Pi, old laptop, desktop).
 
 ---
 
