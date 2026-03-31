@@ -102,11 +102,14 @@ def get_data():
         "is_connected": is_connected
     })
 
-
 @app.route('/sw.js')
 def serve_sw():
     # This serves the service worker from the root URL /sw.js
     return send_from_directory('static', 'sw.js')
+
+@app.route('/privacy')
+def privacy():
+    return render_template('privacy.html')
 
 if __name__ == '__main__':
     threading.Thread(target=read_serial, daemon=True).start()
