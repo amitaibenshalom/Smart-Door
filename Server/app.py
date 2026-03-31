@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, send_from_directory
 from datetime import datetime
 import threading
 import serial
@@ -101,6 +101,12 @@ def get_data():
         "timestamp": door_state["last_change"].timestamp(),
         "is_connected": is_connected
     })
+
+
+@app.route('/sw.js')
+def serve_sw():
+    # This serves the service worker from the root URL /sw.js
+    return send_from_directory('static', 'sw.js')
 
 if __name__ == '__main__':
     threading.Thread(target=read_serial, daemon=True).start()
