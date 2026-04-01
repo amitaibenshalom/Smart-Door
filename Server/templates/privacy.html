@@ -4,88 +4,182 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Privacy Policy - TzufGuard</title>
+
+        <!-- Google Fonts: Montserrat -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+
+        <script>
+            if (localStorage.getItem("theme") === "dark") {
+                document.documentElement.classList.add("dark-mode");
+            }
+        </script>
+
         <style>
+            /* --- Global & Background --- */
             :root {
-                --bg-color: #f4f4f4;
-                --container-bg: #ffffff;
-                --text-color: #333333;
-                --heading-color: #1a1a1a;
-                --border-color: #e0e0e0;
-                --link-color: #2ecc71;
+                --glass-bg: rgba(255, 255, 255, 0.45);
+                --glass-border: rgba(255, 255, 255, 0.6);
+                --text-main: #1d1d1f;
+                --text-secondary: #333333;
+                --card-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+                --link-color: #d81b60;
+                --link-hover: #1d1d1f;
             }
 
-            @media (prefers-color-scheme: dark) {
-                :root {
-                    --bg-color: #121212;
-                    --container-bg: #1e1e1e;
-                    --text-color: #e0e0e0;
-                    --heading-color: #ffffff;
-                    --border-color: #333333;
-                    --link-color: #2ecc71;
-                }
+            html.dark-mode {
+                --glass-bg: rgba(0, 0, 0, 0.55);
+                --glass-border: rgba(255, 255, 255, 0.1);
+                --text-main: #ffffff;
+                --text-secondary: #e0e0e0;
+                --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+                --link-color: #ffbc3b;
+                --link-hover: #ffffff;
             }
 
             body {
-                font-family:
-                    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-                    Helvetica, Arial, sans-serif;
-                line-height: 1.6;
-                color: var(--text-color);
-                background-color: var(--bg-color);
+                font-family: "Montserrat", sans-serif;
+                line-height: 1.7;
                 margin: 0;
-                padding: 20px;
+                padding: 40px 20px;
+                min-height: 100vh;
                 display: flex;
                 justify-content: center;
+                align-items: flex-start;
+                background: linear-gradient(
+                    to bottom,
+                    #ffbc3b 0%,
+                    #f05a7e 50%,
+                    #8b3a9e 100%
+                );
+                background-attachment: fixed;
+                color: var(--text-main);
+                transition: color 0.4s ease;
             }
 
-            .container {
-                max-width: 800px;
+            /* --- Glassmorphism Container --- */
+            .glass-container {
+                background: var(--glass-bg);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border: 1px solid var(--glass-border);
+                border-radius: 24px;
+                padding: 50px 40px;
                 width: 100%;
-                background-color: var(--container-bg);
-                padding: 40px;
-                border-radius: 12px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                margin-top: 40px;
-                margin-bottom: 40px;
+                max-width: 800px;
+                box-shadow: var(--card-shadow);
+                transition:
+                    background 0.4s ease,
+                    border-color 0.4s ease,
+                    box-shadow 0.4s ease;
+                position: relative;
             }
 
+            /* --- Theme Toggle Button --- */
+            .theme-toggle {
+                position: absolute;
+                top: 30px;
+                right: 30px;
+                background: var(--glass-bg);
+                backdrop-filter: blur(4px);
+                border: 1px solid var(--glass-border);
+                font-size: 1.2em;
+                cursor: pointer;
+                padding: 8px 12px;
+                border-radius: 20px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                transition: all 0.2s ease;
+                color: var(--text-main);
+            }
+            .theme-toggle:hover {
+                transform: scale(1.05);
+                background: rgba(255, 255, 255, 0.4);
+            }
+            html.dark-mode .theme-toggle:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            /* --- Typography --- */
             h1 {
-                color: var(--heading-color);
-                border-bottom: 2px solid var(--border-color);
-                padding-bottom: 10px;
+                font-size: 2.2em;
+                font-weight: 700;
                 margin-top: 0;
+                margin-bottom: 5px;
+                letter-spacing: -0.5px;
+                border-bottom: 2px solid var(--glass-border);
+                padding-bottom: 15px;
             }
 
             h2 {
-                color: var(--heading-color);
-                margin-top: 30px;
+                font-size: 1.4em;
+                font-weight: 600;
+                margin-top: 35px;
+                margin-bottom: 15px;
             }
 
             p {
-                margin-bottom: 15px;
+                color: var(--text-secondary);
+                margin-bottom: 18px;
+                font-size: 1.05em;
+            }
+
+            strong {
+                color: var(--text-main);
+                font-weight: 700;
             }
 
             a {
                 color: var(--link-color);
                 text-decoration: none;
-                font-weight: 500;
+                font-weight: 600;
+                transition: color 0.2s ease;
             }
 
             a:hover {
+                color: var(--link-hover);
                 text-decoration: underline;
             }
 
             .date {
                 font-style: italic;
-                color: #888;
+                font-size: 0.9em;
+                color: var(--text-main);
+                opacity: 0.7;
                 margin-bottom: 30px;
+                display: block;
+            }
+
+            @media (max-width: 600px) {
+                .glass-container {
+                    padding: 30px 20px;
+                }
+                .theme-toggle {
+                    top: 15px;
+                    right: 15px;
+                }
+                h1 {
+                    font-size: 1.8em;
+                    margin-top: 20px;
+                }
             }
         </style>
     </head>
     <body>
-        <div class="container">
+        <div class="glass-container">
+            <button
+                id="theme-toggle"
+                class="theme-toggle"
+                title="Toggle Dark Mode"
+            >
+                🌙
+            </button>
+
             <h1>Privacy Policy for TzufGuard</h1>
-            <p class="date">Last updated: March 31, 2026</p>
+            <span class="date">Last updated: March 31, 2026</span>
 
             <p>
                 Amitai Ben Shalom ("we," "our," or "us") operates the TzufGuard
@@ -155,5 +249,39 @@
                 >
             </p>
         </div>
+
+        <script>
+            // --- THEME TOGGLE LOGIC ---
+            const themeToggleBtn = document.getElementById("theme-toggle");
+            const htmlElement = document.documentElement;
+
+            // Handle default state based on localStorage or OS preference
+            if (
+                !htmlElement.classList.contains("dark-mode") &&
+                localStorage.getItem("theme") !== "dark"
+            ) {
+                htmlElement.classList.add("light-mode");
+            }
+
+            // Set initial icon
+            if (htmlElement.classList.contains("dark-mode")) {
+                themeToggleBtn.innerText = "☀️";
+            } else {
+                themeToggleBtn.innerText = "🌙";
+            }
+
+            themeToggleBtn.addEventListener("click", () => {
+                htmlElement.classList.toggle("dark-mode");
+                htmlElement.classList.toggle("light-mode");
+
+                if (htmlElement.classList.contains("dark-mode")) {
+                    localStorage.setItem("theme", "dark");
+                    themeToggleBtn.innerText = "☀️";
+                } else {
+                    localStorage.setItem("theme", "light");
+                    themeToggleBtn.innerText = "🌙";
+                }
+            });
+        </script>
     </body>
 </html>
