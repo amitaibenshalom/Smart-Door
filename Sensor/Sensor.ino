@@ -9,7 +9,7 @@ int lastSensorState = LOW;
 void setup() {
   Serial.begin(BAUDRATE);
   pinMode(SENSOR_IO, INPUT_PULLUP);
-  
+
   int sensorValue = digitalRead(SENSOR_IO);
   lastStatus = (sensorValue == HIGH) ? "open" : "close";
 }
@@ -32,7 +32,7 @@ void loop() {
 
   if ((currentMillis - lastDebounceTime) > DEBOUNCE_DELAY) {
     String currentStatus = (reading == HIGH) ? "open" : "close";
-    
+
     if (currentStatus != lastStatus) {
       Serial.println(currentStatus);
       lastStatus = currentStatus;

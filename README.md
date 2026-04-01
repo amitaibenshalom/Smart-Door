@@ -116,4 +116,4 @@ The system is designed to handle "noisy" sensors. If the door state changes more
 
 ## 📧 Contact
 
-**Amitai Ben Shalom** [amitai@amitaibenshalom.com](mailto:amitai@amitaibenshalom.com)  
+**Amitai Ben Shalom** [amitai@amitaibenshalom.com](mailto:amitai@amitaibenshalom.com)

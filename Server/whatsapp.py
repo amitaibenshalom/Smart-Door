@@ -1,14 +1,16 @@
-import requests
 import urllib.parse
-from config import USE_WHATSAPP, PHONE_NUMBER, API_KEY
+
+import requests
+from config import API_KEY, PHONE_NUMBER, USE_WHATSAPP
+
 
 def send_whatsapp_message(message, force=False):
     if not USE_WHATSAPP:
         return
-    
+
     encoded_msg = urllib.parse.quote(message)
     url = f"https://api.callmebot.com/whatsapp.php?phone={PHONE_NUMBER}&apikey={API_KEY}&text={encoded_msg}"
-    
+
     try:
         response = requests.post(url, timeout=5)
         if response.status_code == 200:
