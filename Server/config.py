@@ -27,3 +27,6 @@ API_KEY = os.getenv("API_KEY")
 # Safety check so the server won't start if secrets are missing
 if USE_WHATSAPP and (not PHONE_NUMBER or not API_KEY):
     raise ValueError("Missing WhatsApp credentials! Check your Server/.env file.")
+
+# --- For "TzufGuard" application, you can ignore this variable! ---
+REGISTER_TOKENS_API_KEY = os.getenv("REGISTER_TOKENS_API_KEY")

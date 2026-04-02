@@ -9,6 +9,7 @@ from config import (
     BAUD_RATE,
     DOMAIN_URL,
     HEARTBEAT_TIMEOUT,
+    REGISTER_TOKENS_API_KEY,
     SERIAL_PORT,
     SPAM_MAX_MESSAGES,
     SPAM_WINDOW_SECONDS,
@@ -25,9 +26,8 @@ door_state = {
     "last_heartbeat": time.time(),
 }
 
-# used for push notifications on "TzufGuard", you can ignore this code
+# used for push notifications on "TzufGuard", you can ignore this line
 TOKEN_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".tokens.txt")
-REGISTER_TOKENS_API_KEY = os.getenv("REGISTER_TOKENS_API_KEY")
 
 change_timestamps = []
 spam_warning_sent = False
