@@ -149,6 +149,7 @@ def dashboard():
     )
 
 
+# for registering push-notification tokens for "TzufGuard" app, you can ignore this method
 @app.route("/api/register-token", methods=["POST"])
 def register_token():
     # 1. Check the bouncer! Look for the key in the headers
@@ -178,6 +179,37 @@ def register_token():
     return jsonify(
         {"message": "Token for push notification registered successfully!"}
     ), 200
+
+
+# for unregistering push-notification tokens for "TzufGuard" app, you can ignore this method
+@app.route("/api/unregister-token", methods=["POST"])
+def unregister_token():
+    # 1. Bouncer check!
+    client_key = request.headers.get("X-API-Key")
+    if client_key != REGISTER_TOKENS_API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    data = request.json
+    token = data.get("token")
+
+    if not token:
+        return jsonify({"error": "No token provided"}), 400
+
+    # 2. Read the file, remove the token, and rewrite the file
+    if os.path.exists(TOKEN_FILE):
+        with open(TOKEN_FILE, "r") as f:
+            tokens = f.read().splitlines()
+
+        if token in tokens:
+            tokens.remove(token)
+
+            # Write the list back to the file without the deleted token
+            with open(TOKEN_FILE, "w") as f:
+                for t in tokens:
+                    f.write(f"{t}\n")
+            print(f"🗑️ Removed token: {token}")
+
+    return jsonify({"message": "Token removed successfully!"}), 200
 
 
 @app.route("/api/data")
