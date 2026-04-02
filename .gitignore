@@ -1,4 +1,6 @@
 Server/.env
 
+Server/.tokens.txt
+
 Server/__pycache__/
 *.pyc

@@ -1,7 +1,9 @@
+import os
 import threading
 import time
 from datetime import datetime
 
+import requests
 import serial
 from config import (
     BAUD_RATE,
@@ -11,7 +13,7 @@ from config import (
     SPAM_MAX_MESSAGES,
     SPAM_WINDOW_SECONDS,
 )
-from flask import Flask, jsonify, render_template, send_from_directory
+from flask import Flask, jsonify, render_template, request, send_from_directory
 from whatsapp import send_whatsapp_message
 
 app = Flask(__name__)
@@ -22,6 +24,10 @@ door_state = {
     "last_change": datetime.now(),
     "last_heartbeat": time.time(),
 }
+
+# used for push notifications on "TzufGuard", you can ignore this code
+TOKEN_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".tokens.txt")
+REGISTER_TOKENS_API_KEY = os.getenv("REGISTER_TOKENS_API_KEY")
 
 change_timestamps = []
 spam_warning_sent = False
@@ -76,6 +82,34 @@ def read_serial():
                 ser.close()
 
 
+# used for push notifications of "TzufGuard" app, you can ignore
+def notify_all_users(door_status):
+    # Only run if we actually have saved tokens
+    if not os.path.exists(TOKEN_FILE):
+        return
+
+    with open(TOKEN_FILE, "r") as f:
+        tokens = f.read().splitlines()
+
+    url = "https://exp.host/--/api/v2/push/send"
+
+    # Customize the message based on the door status
+    title = "Door Alert 🚨" if door_status == "open" else "Door Update 🚪"
+    message = (
+        "Someone opened the door!" if door_status == "open" else "Door is closed :)"
+    )
+
+    # Loop through every user and send the push!
+    for token in tokens:
+        payload = {"to": token, "title": title, "body": message, "sound": "default"}
+
+        try:
+            response = requests.post(url, json=payload)
+            print(f"Sent to {token}: {response.status_code}")
+        except Exception as e:
+            print(f"Failed to send to {token}: {e}")
+
+
 def handle_door_change(new_status):
     global spam_warning_sent
 
@@ -83,6 +117,7 @@ def handle_door_change(new_status):
         door_state["status"] = new_status
         door_state["last_change"] = datetime.now()
         print(f"Serial Update: Door is now {new_status}")
+        notify_all_users(door_state["status"])
 
         now = time.time()
 
@@ -112,6 +147,37 @@ def dashboard():
     return render_template(
         "index.html", door_state=door_state, is_connected=is_connected
     )
+
+
+@app.route("/api/register-token", methods=["POST"])
+def register_token():
+    # 1. Check the bouncer! Look for the key in the headers
+    client_key = request.headers.get("X-API-Key")
+
+    if client_key != REGISTER_TOKENS_API_KEY:
+        print("🚨 Blocked an unauthorized register token request!")
+        return jsonify({"error": "Unauthorized."}), 401
+
+    # 2. If they pass the check, process the token
+    data = request.json
+    token = data.get("token")
+
+    if not token:
+        return jsonify({"error": "No token provided"}), 400
+
+    existing_tokens = set()
+    if os.path.exists(TOKEN_FILE):
+        with open(TOKEN_FILE, "r") as f:
+            existing_tokens = set(f.read().splitlines())
+
+    if token not in existing_tokens:
+        with open(TOKEN_FILE, "a") as f:
+            f.write(f"{token}\n")
+        print(f"✅ Saved new token: {token}")
+
+    return jsonify(
+        {"message": "Token for push notification registered successfully!"}
+    ), 200
 
 
 @app.route("/api/data")
