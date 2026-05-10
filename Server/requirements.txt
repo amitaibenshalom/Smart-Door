@@ -1,11 +1,8 @@
-# Web server framework
-flask>=2.0.0
-
-# Communication with the Arduino (ESP, Nano, Uno, etc...) via USB
-pyserial>=3.5
-
-# Sending the HTTP requests to CallMeBot (WhatsApp)
-requests>=2.25.1
-
-# Managing the hidden .env secrets file
-python-dotenv>=1.2.1
+Flask>=3.0.0
+Flask-Cors>=4.0.0
+Flask-JWT-Extended>=4.6.0
+Flask-Migrate>=4.0.0
+Flask-SQLAlchemy>=3.1.0
+PyJWT>=2.8.0
+python-dotenv>=1.0.0
+pytest>=8.0.0
