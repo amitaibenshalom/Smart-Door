@@ -20,11 +20,18 @@ class Config:
         "DATABASE_URL", "sqlite:///smart_door.sqlite3"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    CORS_ORIGINS = [
-        origin.strip()
-        for origin in os.getenv("CORS_ORIGINS", "").split(",")
-        if origin.strip()
-    ]
+    CORS_ENABLED = os.getenv("CORS_ENABLED", "true").lower() in {
+        "1",
+        "true",
+        "yes",
+    }
+    CORS_ORIGINS = os.getenv("CORS_ORIGINS", "*").strip() or "*"
+    if CORS_ORIGINS != "*":
+        CORS_ORIGINS = [
+            origin.strip()
+            for origin in CORS_ORIGINS.split(",")
+            if origin.strip()
+        ]
     NOTIFICATIONS_ENABLED = os.getenv("NOTIFICATIONS_ENABLED", "true").lower() in {
         "1",
         "true",

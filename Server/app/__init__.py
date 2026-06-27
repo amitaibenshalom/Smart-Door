@@ -25,9 +25,6 @@ def create_app(config_name=None):
     jwt.init_app(app)
     register_jwt_handlers(jwt)
 
-    if app.config["CORS_ORIGINS"]:
-        CORS(app, origins=app.config["CORS_ORIGINS"])
-
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(me_bp, url_prefix="/api")
     app.register_blueprint(doors_bp, url_prefix="/api/doors")
@@ -36,8 +33,19 @@ def create_app(config_name=None):
 
     register_error_handlers(app)
     register_legacy_pages(app)
+    register_cors(app)
 
     return app
+
+
+def register_cors(app):
+    if app.config["CORS_ENABLED"]:
+        CORS(
+            app,
+            resources={r"/api/*": {"origins": app.config["CORS_ORIGINS"]}},
+            allow_headers=["Content-Type", "Authorization"],
+            methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+        )
 
 
 def register_jwt_handlers(jwt_manager):

@@ -41,7 +41,8 @@ FLASK_APP=app.py
 SECRET_KEY=replace-with-a-random-secret-at-least-32-bytes
 JWT_SECRET_KEY=replace-with-a-different-random-secret-at-least-32-bytes
 DATABASE_URL=sqlite:///smart_door.sqlite3
-CORS_ORIGINS=
+CORS_ENABLED=true
+CORS_ORIGINS=*
 NOTIFICATIONS_ENABLED=true
 ```
 
@@ -157,4 +158,4 @@ Push delivery currently uses a mock notification service that logs outgoing noti
 - Door tokens are never returned by API responses.
 - Users can only access doors linked to their own account.
 - Auth endpoints are structured so a rate limiter can be added at the blueprint/app boundary.
-- CORS is disabled unless `CORS_ORIGINS` is configured.
+- CORS is enabled for `/api/*` by default. Use `CORS_ORIGINS` to restrict allowed origins in production, for example `https://amitaibenshalom.com,https://app.example.com`.

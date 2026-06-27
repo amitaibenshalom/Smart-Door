@@ -13,6 +13,16 @@ def test_user_registration(client):
     assert "password_hash" not in body["user"]
 
 
+def test_cors_headers_are_enabled_for_api(client):
+    response = client.get(
+        "/api/health",
+        headers={"Origin": "http://localhost:3000"},
+    )
+
+    assert response.status_code == 200
+    assert response.headers["Access-Control-Allow-Origin"] == "http://localhost:3000"
+
+
 def test_duplicate_user_email(client):
     register_user(client, email="dupe@example.com")
     response = register_user(client, email="dupe@example.com")
